@@ -23,6 +23,9 @@ import jakarta.persistence.Id;
 
 import org.springframework.util.Assert;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * A guestbook entry. An entity as in the Domain Driven Design context. Mapped onto the database using JPA annotations.
  *
@@ -45,10 +48,14 @@ class GuestbookEntry {
 	 * @param email must not be {@literal null} or empty and match email pattern
 	 */
 	public GuestbookEntry(String name, String text, String email) {
-
 		Assert.hasText(name, "Name must not be null or empty!");
 		Assert.hasText(text, "Text must not be null or empty!");
 		Assert.hasText(email, "Text must not be null or empty!");
+
+		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+		Matcher matcher = pattern.matcher(email);
+
+		Assert.isTrue(matcher.matches(), "Must be a valid email address");
 
 		this.name = name;
 		this.text = text;
